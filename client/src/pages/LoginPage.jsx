@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState,useContext } from "react";
+import { UserContext } from "../UserContext";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const {setUser}=useContext(UserContext);
   async function hamdleLoginSubmit(ev) {
     ev.preventDefault();
 
     try {
-      await axios.post("/login", { email, password }, { withCredentials: true });
+      const {data}=await axios.post("/login", { email, password }, { withCredentials: true });
+      setUser(data);
       alert("User logged in successfully");
       setRedirect(true);
     } catch (e) {
