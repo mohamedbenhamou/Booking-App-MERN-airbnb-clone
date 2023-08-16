@@ -68,16 +68,19 @@ app.post("/login", async (req, res) => {
 });
 
 app.get('/profile', (req,res) => {
-  mongoose.connect(process.env.MONGO_URL);
-  const {token} = req.cookies;
-  if (token) {
-    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
-      if (err) throw err;
-      const {name,email,_id} = await User.findById(userData.id);
-      res.json({name,email,_id});
+  const {token}= req.cookies;
+  if(token){
+    jwt.verify(token, jwtSecret, {} ,async(err,userData)=> {
+      if(err) throw err;
+      const {email,username,_id}=await User.findById(userData.id);
+
+
+      res.json({email,username,_id});
     });
-  } else {
+
+  }else{
     res.json(null);
   }
+
 });
 app.listen(4000);
